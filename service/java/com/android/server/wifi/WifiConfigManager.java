@@ -18,6 +18,7 @@ package com.android.server.wifi;
 
 import static android.net.wifi.WifiConfiguration.INVALID_NETWORK_ID;
 
+import android.Manifest;
 import android.app.admin.DeviceAdminInfo;
 import android.app.admin.DevicePolicyManagerInternal;
 import android.content.ContentResolver;
@@ -1663,10 +1664,10 @@ public class WifiConfigManager {
             int reason) {
         Intent intent = new Intent(WifiManager.CONFIGURED_NETWORKS_CHANGED_ACTION);
         intent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT);
-        intent.putExtra(WifiManager.EXTRA_MULTIPLE_NETWORKS_CHANGED, false);
-        intent.putExtra(WifiManager.EXTRA_WIFI_CONFIGURATION, network);
+        intent.putExtra(WifiManager.EXTRA_MULTIPLE_NETWORKS_CHANGED, true);
         intent.putExtra(WifiManager.EXTRA_CHANGE_REASON, reason);
-        mContext.sendBroadcastAsUser(intent, UserHandle.ALL);
+        mContext.sendBroadcastAsUser(intent, UserHandle.ALL,
+                Manifest.permission.ACCESS_WIFI_STATE);
     }
 
     /**
@@ -1676,7 +1677,8 @@ public class WifiConfigManager {
         Intent intent = new Intent(WifiManager.CONFIGURED_NETWORKS_CHANGED_ACTION);
         intent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT);
         intent.putExtra(WifiManager.EXTRA_MULTIPLE_NETWORKS_CHANGED, true);
-        mContext.sendBroadcastAsUser(intent, UserHandle.ALL);
+        mContext.sendBroadcastAsUser(intent, UserHandle.ALL,
+                Manifest.permission.ACCESS_WIFI_STATE);
     }
 
     void loadConfiguredNetworks() {
